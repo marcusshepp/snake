@@ -12,6 +12,10 @@ class Directions {
 
 const DIRECTIONS = new Directions();
 
+let randomIndex = (cap) => {
+  return Math.ceil(Math.random() * cap);
+};
+
 let generateRandCoor = () => {
   const x = Math.floor(Math.random() * canvas.width);
   const y = Math.floor(Math.random() * canvas.height);
@@ -22,9 +26,11 @@ class Snake {
   direction = DIRECTIONS.RIGHT;
   x = 50;
   y = 50;
+  lastx = null;
+  lasty = null;
   height = 30;
   width = 30;
-  speed = 4;
+  speed = 2;
   tails = 0;
   constructor() {}
 
@@ -45,6 +51,18 @@ class Snake {
       // left boundary
       return true;
     }
+  };
+
+  reset = () => {
+    this.x = canvas.width / 2;
+    this.y = canvas.height / 2;
+    const d = [
+      DIRECTIONS.DOWN,
+      DIRECTIONS.LEFT,
+      DIRECTIONS.RIGHT,
+      DIRECTIONS.UP,
+    ];
+    this.direction = randomIndex(d.length);
   };
 }
 
@@ -86,13 +104,30 @@ let gameLoop = () => {
     snake.x += snake.speed;
   }
   if (snake.isAtBoundary()) {
-    snake.x = canvas.width / 2;
-    snake.y = canvas.height / 2;
+    snake.reset();
   }
   ctx.fillRect(snake.x, snake.y, snake.width, snake.height);
 
-  for (let i = 0; i < snake.tails; i++) {
-    ctx.fillRect(snake.x + 100, snake.y + 100, snake.width, snake.height);
+  for (let i = 1; i < snake.tails; i++) {
+    // wtf am I doing here
+    // need to calc the x, y coor for each tail
+    // draw snake x , y
+    // draw next snake x, y <- this is dependant on the current/last
+    // position of the main snake rect
+    // also dependant on the direction the snake is currently going
+
+    let lastx, lasty;
+    if (snake.direction == DIRECTIONS.UP) {
+      lastx = snake.x - snake.width * i;
+      lasty = snake.y - snake.width * i;
+    } else if (snake.direction == DIRECTIONS.DOWN) {
+      snake.y += snake.speed;
+    } else if (snake.direction == DIRECTIONS.LEFT) {
+      snake.x -= snake.speed;
+    } else if (snake.direction == DIRECTIONS.RIGHT) {
+      snake.x += snake.speed;
+    }
+    ctx.fillRect(lastx, lasty, snake.width, snake.height);
   }
 
   ctx.fillStyle = "blue";
