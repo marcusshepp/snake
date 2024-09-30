@@ -1,0 +1,43 @@
+.container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.form {
+  width: 250px;
+  height: 250px;
+  background-color: grey;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  transition: background-color 1s;
+  animation-name: slidein;
+  animation-iteration-count: 2;
+  animation-direction: alternate;
+  background-color: white;
+  animation-duration: 1s;
+}
+
+.form > input {
+  margin: 15px 0px 0px 8px;
+}
+
+/* .form:hover {
+} */
+
+@keyframes slidein {
+  from {
+    translate: 150vw 0;
+    scale: 200% 1;
+    background-color: white;
+  }
+
+  to {
+    translate: 0 0;
+    scale: 100% 1;
+    background-color: red;
+  }
+}
