@@ -117,11 +117,13 @@ let gameLoop = () => {
     // also dependant on the direction the snake is currently going
 
     let lastx, lasty;
-    if (snake.direction == DIRECTIONS.UP) {
-      lastx = snake.x - snake.width * i;
-      lasty = snake.y - snake.width * i;
-    } else if (snake.direction == DIRECTIONS.DOWN) {
-      snake.y += snake.speed;
+    let index = i * 1.1;
+    if (
+      snake.direction == DIRECTIONS.UP ||
+      snake.direction == DIRECTIONS.DOWN
+    ) {
+      lastx = snake.x;
+      lasty = snake.y - snake.width * index;
     } else if (snake.direction == DIRECTIONS.LEFT) {
       snake.x -= snake.speed;
     } else if (snake.direction == DIRECTIONS.RIGHT) {
