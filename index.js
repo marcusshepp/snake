@@ -133,6 +133,7 @@ let gameLoop = () => {
 
         let posIndex = snake.prevPositions.length - 10;
         let prevAssIndex;
+
         for (let i = 0; i < snake.tails; i++) {
             prevAssIndex = posIndex;
             if (i > 0) {
