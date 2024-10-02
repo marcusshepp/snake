@@ -1,6 +1,7 @@
 const canvas = document.getElementById('can');
 const ctx = canvas.getContext('2d');
 ctx.font = '25px OCR A Std, monospace';
+ctx.fillStyle = 'white';
 
 let cat;
 let loadCat = () => {
