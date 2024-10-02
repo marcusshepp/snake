@@ -6,3 +6,14 @@ todo
 - player is placed at a certain part of the sceen, 
 standing still, with all tails under them, at the start of a level 
 - lives
+
+
+levels:
+
+- make it to the food without touching the edges of the barriors
+- dont move the player until they've moved
+
+
+snake:
+- might just be better to simply have the snake be circles
+- and have the food be like a vibrant colored circle
