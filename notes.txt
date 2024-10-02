@@ -1,0 +1,8 @@
+todo
+
+- black background
+- white images drawn with canvas
+- walls spawn after each food is eaten
+- player is placed at a certain part of the sceen, 
+standing still, with all tails under them, at the start of a level 
+- lives
