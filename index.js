@@ -63,7 +63,37 @@ class Snake {
     speed = 4;
     tails = 0;
     lives = 3;
+
     constructor() {}
+
+    reset = () => {
+        this.x = canvas.width / 2;
+        this.y = canvas.height / 2;
+        this.direction = null;
+    };
+
+    isCollidingTail = () => {
+        if (this.tails > 0 && this.direction) {
+            let posIndex = this.prevPositions.length - 10;
+            let prevAssIndex;
+
+            for (let i = 0; i < this.tails; i++) {
+                prevAssIndex = posIndex;
+                if (i > 0) {
+                    posIndex = prevAssIndex - 10;
+                }
+                let pos = this.prevPositions[posIndex];
+                const coll =
+                    this.x < pos.x + this.width &&
+                    this.x + this.width > pos.x &&
+                    this.y < pos.y + this.height &&
+                    this.y + this.height > pos.y;
+                if (coll) {
+                    return true;
+                }
+            }
+        }
+    };
 }
 
 let snake = new Snake();
@@ -110,12 +140,6 @@ class Barrier {
             this.y + this.h > snake.y
         );
     };
-}
-
-class Level {
-    barriers = [];
-    number = 1;
-    constructor() {}
 }
 
 let updateScore = () => {
@@ -208,8 +232,9 @@ let moveSnake = () => {
     } else if (isLeft) {
         snake.x -= snake.speed;
     } else if (isRight) {
+        snake.x += snake.speed;
     }
-    snake.x += snake.speed;
+
     ctx.drawImage(cat, snake.x, snake.y, snake.width, snake.height);
 };
 
@@ -229,46 +254,12 @@ let setPrevPositions = () => {
     }
 };
 
-let createHorB = (x, y) => {
-    let b1 = new Barrier(x, y, 200, 20);
-    ctx.fillRect(b1.x, b1.y, b1.w, b1.h);
-    return b1;
-};
-
-let createVirtB = (x, y) => {
-    let b1 = new Barrier(x, y, 20, 200);
-    ctx.fillRect(b1.x, b1.y, b1.w, b1.h);
-    return b1;
-};
-
-let createLevel = () => {
-    let b1 = createHorB(30, 30);
-    let b2 = createVirtB(30, 30);
-    let b3 = createHorB(300, 100);
-    let b4 = createVirtB(100, 300);
-    const barrs = [b1, b2, b3, b4];
-    if (barrs.some((b) => b.isColliding())) {
+function checkForTailOverlap() {
+    if (snake.isCollidingTail()) {
         snake.lives--;
-        snake.x = 70;
-        snake.y = 70;
-        snake.direction = null;
+        snake.reset();
     }
-    /*
-    theres gotta be a better way to do this
-    I need the x,y coor of all the parts of the map that aren't allowed
-    but how,
-    do I rethink the map in its entirety?
-    do I type out each individual x,y that's off limits?
-    if I do create objects for each wall, then I can use the starting x, y 
-    and the height and width to calc all the bad x, y coor that it generates
-    similar to the isEaten function on the Food
-    offlimits parts of the map.
-    Color all those white.
-    Then I can detect if player collides with those boundaries.
-    */
-};
-
-let drawLevel = () => {};
+}
 
 function gameLoop() {
     if (this.paused) {
@@ -277,12 +268,12 @@ function gameLoop() {
     if (!this.paused) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         if (cat) {
-            createLevel();
             setPrevPositions();
             moveSnake();
             handleBoundary();
             tailLogic();
             drawFoodAndUpdateScore();
+            checkForTailOverlap();
         }
     }
     drawLives();

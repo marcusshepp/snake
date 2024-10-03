@@ -17,3 +17,6 @@ levels:
 snake:
 - might just be better to simply have the snake be circles
 - and have the food be like a vibrant colored circle
+
+might be mixing two games now just outta curiosity
+might be better to just lose a life if you hit the edge and if you hit yourself
