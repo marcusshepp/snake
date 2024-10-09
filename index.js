@@ -63,6 +63,7 @@ class Snake {
   speed = 4;
   tails = 0;
   lives = 3;
+  isIdle = true;
 
   constructor() { }
 
@@ -70,26 +71,29 @@ class Snake {
     this.x = canvas.width / 2;
     this.y = canvas.height / 2;
     this.direction = null;
+    this.isIdle = true;
   };
 
   isCollidingTail = () => {
-    if (this.tails > 0 && this.direction) {
-      let posIndex = this.prevPositions.length - 10;
-      let prevAssIndex;
+    if (!this.isIdle) {
+      if (this.tails > 0 && this.direction) {
+        let posIndex = this.prevPositions.length - 10;
+        let prevAssIndex;
 
-      for (let i = 0; i < this.tails; i++) {
-        prevAssIndex = posIndex;
-        if (i > 0) {
-          posIndex = prevAssIndex - 10;
-        }
-        let pos = this.prevPositions[posIndex];
-        const coll =
-          this.x < pos.x + this.width &&
-          this.x + this.width > pos.x &&
-          this.y < pos.y + this.height &&
-          this.y + this.height > pos.y;
-        if (coll) {
-          return true;
+        for (let i = 0; i < this.tails; i++) {
+          prevAssIndex = posIndex;
+          if (i > 0) {
+            posIndex = prevAssIndex - 10;
+          }
+          let pos = this.prevPositions[posIndex];
+          const coll =
+            this.x < pos.x + this.width &&
+            this.x + this.width > pos.x &&
+            this.y < pos.y + this.height &&
+            this.y + this.height > pos.y;
+          if (coll) {
+            return true;
+          }
         }
       }
     }
@@ -173,6 +177,7 @@ window.addEventListener('keydown', (e) => {
     } else if (e.key == 'ArrowRight') {
       snake.direction = DIRECTIONS.RIGHT;
     }
+    snake.isIdle = false;
   }
 });
 
@@ -274,7 +279,7 @@ function gameLoop() {
       handleBoundary();
       tailLogic();
       drawFoodAndUpdateScore();
-      checkForTailOverlap();
+      // checkForTailOverlap();
     }
   }
   drawLives();
