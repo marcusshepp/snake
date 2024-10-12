@@ -1,8 +1,8 @@
 enum DIRECTIONS {
-    RIGHT = 'right',
-    LEFT = 'left',
-    UP = 'up',
-    DOWN = 'down',
+    RIGHT = "right",
+    LEFT = "left",
+    UP = "up",
+    DOWN = "down",
 }
 
 export class SnakeHead {
@@ -41,18 +41,20 @@ export class SnakeHead {
         }
     }
 
+    public foo() {}
+
     private currentBlock() {}
 
     private listenToKeyboardInputs() {
-        window.addEventListener('keydown', (e: KeyboardEvent) => {
+        window.addEventListener("keydown", (e: KeyboardEvent) => {
             if (e && e.key) {
-                if (e.key == 'ArrowDown') {
+                if (e.key == "ArrowDown") {
                     this.direction = DIRECTIONS.DOWN;
-                } else if (e.key == 'ArrowUp') {
+                } else if (e.key == "ArrowUp") {
                     this.direction = DIRECTIONS.UP;
-                } else if (e.key == 'ArrowLeft') {
+                } else if (e.key == "ArrowLeft") {
                     this.direction = DIRECTIONS.LEFT;
-                } else if (e.key == 'ArrowRight') {
+                } else if (e.key == "ArrowRight") {
                     this.direction = DIRECTIONS.RIGHT;
                 } else {
                     return;
