@@ -1,33 +1,40 @@
+import { GameState } from "./game";
 import { SnakeHead } from "./snake";
 
 const canvas = document.getElementById("can") as HTMLCanvasElement;
-const content = canvas.getContext("2d") as CanvasRenderingContext2D;
-const BLOCK_WIDTH: number = 50;
-const BLOCK_HEIGHT: number = 50;
+const context = canvas.getContext("2d") as CanvasRenderingContext2D;
+context.fillStyle = "white";
 
+let game: GameState;
 let snakeHead: SnakeHead;
 
 function drawBoard() {
     for (let x = 0; x < 800; x += 50) {
         for (let y = 0; y < 600; y += 50) {
-            content.beginPath();
-            content.rect(x, y, BLOCK_HEIGHT, BLOCK_WIDTH);
-            content.stroke();
+            context.beginPath();
+            context.rect(x, y, game.BLOCK_SIZE, game.BLOCK_SIZE);
+            context.stroke();
         }
     }
 }
 
 function drawBlock() {
-    content.fillStyle = "blue";
-    content.fillRect(snakeHead.x, snakeHead.y, BLOCK_HEIGHT, BLOCK_WIDTH);
+    context.fillRect(
+        snakeHead.x,
+        snakeHead.y,
+        game.BLOCK_SIZE,
+        game.BLOCK_SIZE
+    );
 }
 
 function initializeObjects() {
-    snakeHead = new SnakeHead();
+    game = new GameState();
+    game.createBoard();
+    snakeHead = new SnakeHead(game);
 }
 
 function gameLoop() {
-    content.clearRect(0, 0, canvas.width, canvas.height);
+    context.clearRect(0, 0, canvas.width, canvas.height);
     drawBoard();
     drawBlock();
     requestAnimationFrame(gameLoop);

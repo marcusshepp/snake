@@ -1,3 +1,7 @@
 #can {
-    border: solid block 1px;
+    border: solid white 1px;
+}
+
+body {
+    background-color: black;
 }
