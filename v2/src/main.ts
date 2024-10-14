@@ -1,5 +1,5 @@
-import { GameState } from "./game";
-import { SnakeHead } from "./snake";
+import { GameState } from "./state";
+import { SnakeBody, SnakeHead } from "./snake";
 
 const canvas = document.getElementById("can") as HTMLCanvasElement;
 const context = canvas.getContext("2d") as CanvasRenderingContext2D;
@@ -8,17 +8,7 @@ context.fillStyle = "white";
 let game: GameState;
 let snakeHead: SnakeHead;
 
-function drawBoard() {
-    for (let x = 0; x < 800; x += 50) {
-        for (let y = 0; y < 600; y += 50) {
-            context.beginPath();
-            context.rect(x, y, game.BLOCK_SIZE, game.BLOCK_SIZE);
-            context.stroke();
-        }
-    }
-}
-
-function drawBlock() {
+function drawSnakeHead(): void {
     context.fillRect(
         snakeHead.x,
         snakeHead.y,
@@ -27,16 +17,29 @@ function drawBlock() {
     );
 }
 
-function initializeObjects() {
-    game = new GameState();
-    game.createBoard();
-    snakeHead = new SnakeHead(game);
+function drawSnakeBody(): void {
+    const bodies: SnakeBody[] = game.snakeBodies;
+    bodies.forEach((b: SnakeBody): void => {
+        context.fillRect(b.x, b.y, game.BLOCK_SIZE, game.BLOCK_SIZE);
+    });
 }
 
-function gameLoop() {
+function initializeObjects(): void {
+    game = new GameState();
+    snakeHead = new SnakeHead(game);
+
+    game.snakeBodies.push(new SnakeBody(game, 0));
+    game.snakeBodies.push(new SnakeBody(game, 1));
+}
+
+function gameLoop(): void {
     context.clearRect(0, 0, canvas.width, canvas.height);
-    drawBoard();
-    drawBlock();
+
+    drawSnakeHead();
+    drawSnakeBody();
+    snakeHead.moveContinuously();
+
+    // can I change the tick rate here??
     requestAnimationFrame(gameLoop);
 }
 
