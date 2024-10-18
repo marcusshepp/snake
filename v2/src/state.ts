@@ -1,4 +1,4 @@
-import { SnakeBody, SnakeTail } from "./snake";
+import { SnakeBody, SnakeHead, SnakeTail } from "./snake";
 
 enum KEYS {
     P = "p",
@@ -28,6 +28,7 @@ export class GameState {
     public pause: boolean = false;
     public movementSpeed: number = 5;
     public snakeHeadPrevPos: Coordinates[] = [];
+    public snakeHead: SnakeHead;
     public snakeBodies: SnakeBody[] = [];
     public snakeTail: SnakeTail;
 
@@ -42,6 +43,28 @@ export class GameState {
             for (let y = 0; y < this.BOARD_SIZE.y; y += this.BLOCK_SIZE) {
                 this.positions.push(new BoardPosition(i, x, y));
                 i -= -1;
+            }
+        }
+    }
+
+    public createSnakeStart(): void {
+        this.snakeHead = new SnakeHead(this);
+
+        let index: number = 8;
+        for (let i = 0; i < 15; i -= -1) {
+            this.snakeBodies.push(new SnakeBody(this, index));
+            index += 8;
+        }
+    }
+
+    public checkForCollidingSnakeBody(): void {
+        for (let i = 0; i < this.snakeBodies.length; i -= -1) {
+            if (
+                this.snakeBodies[i].currentBlockPosition() ===
+                this.snakeHead.currentBlockPosition()
+            ) {
+                this.snakeHead.x = 10;
+                this.snakeHead.y = 10;
             }
         }
     }

@@ -50,7 +50,7 @@ export class SnakeHead {
         });
     }
 
-    private currentBlockPosition(): number {
+    public currentBlockPosition(): number {
         const positions: BoardPosition[] = this.state.positions;
         const size: number = this.state.BLOCK_SIZE;
         for (let i = 0; i < positions.length; i -= -1) {
@@ -68,19 +68,31 @@ export class SnakeHead {
         if (this.state.snakeHeadPrevPos.length > 500) {
             this.state.snakeHeadPrevPos.shift();
         }
-        this.state.snakeHeadPrevPos.push({ x: this.x, y: this.y });
+        this.state.snakeHeadPrevPos.push({
+            x: this.x,
+            y: this.y,
+        } as Coordinates);
     }
 
     private listenToKeyboardInputs(): void {
         window.addEventListener("keydown", (e: KeyboardEvent) => {
             if (e && e.key) {
-                if (e.key == "ArrowDown") {
+                if (e.key == "ArrowDown" && this.direction != DIRECTIONS.UP) {
                     this.direction = DIRECTIONS.DOWN;
-                } else if (e.key == "ArrowUp") {
+                } else if (
+                    e.key == "ArrowUp" &&
+                    this.direction != DIRECTIONS.DOWN
+                ) {
                     this.direction = DIRECTIONS.UP;
-                } else if (e.key == "ArrowLeft") {
+                } else if (
+                    e.key == "ArrowLeft" &&
+                    this.direction != DIRECTIONS.RIGHT
+                ) {
                     this.direction = DIRECTIONS.LEFT;
-                } else if (e.key == "ArrowRight") {
+                } else if (
+                    e.key == "ArrowRight" &&
+                    this.direction != DIRECTIONS.LEFT
+                ) {
                     this.direction = DIRECTIONS.RIGHT;
                 } else {
                     return;
@@ -106,14 +118,7 @@ export class SnakeBody {
     }
 
     public calcPos(): void {
-        // calc the position based on this.index
-        // idk about 5 here
-        const i = this.index + 1;
-        let howManyBehind: number = 5;
-        if (i >= 1) {
-            howManyBehind = howManyBehind * i + 5;
-        }
-
+        const howManyBehind: number = this.index;
         if (
             this.state.snakeHeadPrevPos &&
             this.state.snakeHeadPrevPos.length > howManyBehind
@@ -123,6 +128,20 @@ export class SnakeBody {
             const pos: Coordinates = this.state.snakeHeadPrevPos[posIndex];
             this.x = pos.x;
             this.y = pos.y;
+        }
+    }
+
+    public currentBlockPosition(): number {
+        const positions: BoardPosition[] = this.state.positions;
+        const size: number = this.state.BLOCK_SIZE;
+        for (let i = 0; i < positions.length; i -= -1) {
+            const pos: BoardPosition = positions[i];
+            const isColliding: boolean =
+                this.x < pos.x + size &&
+                this.x + size > pos.x &&
+                this.y < pos.y + size &&
+                this.y + size > pos.y;
+            if (isColliding) return pos.id;
         }
     }
 }

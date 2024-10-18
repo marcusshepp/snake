@@ -26,10 +26,9 @@ function drawSnakeBody(): void {
 
 function initializeObjects(): void {
     game = new GameState();
-    snakeHead = new SnakeHead(game);
-
-    game.snakeBodies.push(new SnakeBody(game, 0));
-    game.snakeBodies.push(new SnakeBody(game, 1));
+    game.createSnakeStart();
+    snakeHead = game.snakeHead;
+    drawSnakeBody();
 }
 
 function gameLoop(): void {
@@ -38,6 +37,8 @@ function gameLoop(): void {
     drawSnakeHead();
     drawSnakeBody();
     snakeHead.moveContinuously();
+
+    game.checkForCollidingSnakeBody();
 
     // can I change the tick rate here??
     requestAnimationFrame(gameLoop);
