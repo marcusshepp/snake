@@ -22,7 +22,7 @@ export class BoardPosition {
 }
 
 export class GameState {
-    public BLOCK_SIZE: number = 25;
+    public BLOCK_SIZE: number = 100;
     public BOARD_SIZE: Coordinates = { x: 800, y: 600 };
     public positions: BoardPosition[] = [];
     public pause: boolean = false;

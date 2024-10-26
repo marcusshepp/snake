@@ -1,5 +1,7 @@
 import { GameState } from "./state";
 import { SnakeBody, SnakeHead } from "./snake";
+import { drawImageRot } from "./utils/rotate-image";
+import { snake1, snakeBody } from "./asset";
 
 const canvas = document.getElementById("can") as HTMLCanvasElement;
 const context = canvas.getContext("2d") as CanvasRenderingContext2D;
@@ -9,18 +11,29 @@ let game: GameState;
 let snakeHead: SnakeHead;
 
 function drawSnakeHead(): void {
-    context.fillRect(
+    drawImageRot(
+        context,
+        snake1.element,
         snakeHead.x,
         snakeHead.y,
         game.BLOCK_SIZE,
-        game.BLOCK_SIZE
+        game.BLOCK_SIZE,
+        snakeHead.degrees
     );
 }
 
 function drawSnakeBody(): void {
     const bodies: SnakeBody[] = game.snakeBodies;
     bodies.forEach((b: SnakeBody): void => {
-        context.fillRect(b.x, b.y, game.BLOCK_SIZE, game.BLOCK_SIZE);
+        drawImageRot(
+            context,
+            snakeBody.element,
+            b.x,
+            b.y,
+            game.BLOCK_SIZE,
+            game.BLOCK_SIZE,
+            b.degrees
+        );
     });
 }
 
@@ -36,11 +49,10 @@ function gameLoop(): void {
 
     drawSnakeHead();
     drawSnakeBody();
-    snakeHead.moveContinuously();
 
-    game.checkForCollidingSnakeBody();
+    snakeHead.moveSnake();
+    // game.checkForCollidingSnakeBody();
 
-    // can I change the tick rate here??
     requestAnimationFrame(gameLoop);
 }
 

@@ -8,10 +8,11 @@ enum DIRECTIONS {
 }
 
 export class SnakeHead {
-    public x: number = 0;
-    public y: number = 0;
+    public x: number = 50;
+    public y: number = 50;
     public isIdle: boolean = true;
 
+    private coorLastDirectionChange: Coordinates;
     private direction: string;
     private state: GameState;
     private speed: number;
@@ -22,7 +23,19 @@ export class SnakeHead {
         this.listenToKeyboardInputs();
     }
 
-    public moveContinuously(): void {
+    public get degrees(): number {
+        if (this.direction === DIRECTIONS.UP) {
+            return 0;
+        } else if (this.direction === DIRECTIONS.DOWN) {
+            return 180;
+        } else if (this.direction === DIRECTIONS.LEFT) {
+            return 270;
+        } else {
+            return 90;
+        }
+    }
+
+    public moveSnake(): void {
         if (!this.state.pause) {
             if (this.direction === DIRECTIONS.UP) {
                 this.y -= this.speed;
@@ -34,20 +47,10 @@ export class SnakeHead {
                 this.x += this.speed;
             }
         }
-        if (
-            this.x > this.state.BOARD_SIZE.x ||
-            this.x < 0 ||
-            this.y > this.state.BOARD_SIZE.y ||
-            this.y < 0
-        ) {
-            this.x = this.state.BOARD_SIZE.x / 2;
-            this.y = this.state.BOARD_SIZE.y / 2;
-        }
 
+        this.borderDetection();
         this.recordCurrentPos();
-        this.state.snakeBodies.forEach((b: SnakeBody): void => {
-            b.calcPos();
-        });
+        this.calculateBodyPositions();
     }
 
     public currentBlockPosition(): number {
@@ -101,12 +104,36 @@ export class SnakeHead {
             }
         });
     }
+
+    private recordCoorWhenDirChange(): void {
+        // i need the direction the snake head changed here as well
+    }
+
+    private calculateBodyPositions(): void {
+        this.state.snakeBodies.forEach((b: SnakeBody): void => {
+            b.calcPos();
+        });
+    }
+
+    private borderDetection(): void {
+        if (
+            this.x > this.state.BOARD_SIZE.x ||
+            this.x < 0 ||
+            this.y > this.state.BOARD_SIZE.y ||
+            this.y < 0
+        ) {
+            this.x = this.state.BOARD_SIZE.x / 2;
+            this.y = this.state.BOARD_SIZE.y / 2;
+        }
+    }
 }
 
 export class SnakeBody {
     public x: number;
     public y: number;
     public index: number;
+    public element: HTMLImageElement;
+
     private state: GameState;
     private speed: number;
 
@@ -115,6 +142,10 @@ export class SnakeBody {
         this.speed = state.movementSpeed;
         this.index = index;
         state.snakeBodies.push(this);
+    }
+
+    public get degrees(): number {
+        return 0;
     }
 
     public calcPos(): void {
