@@ -34,3 +34,8 @@ body {
     height: 50px;
     transform: rotate(90deg);
 }
+
+.snake-body {
+    width: 40px;
+    height: 40px;
+}

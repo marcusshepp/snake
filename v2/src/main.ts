@@ -1,7 +1,8 @@
 import { GameState } from "./state";
-import { SnakeBody, SnakeHead } from "./snake";
+import { SnakeHead } from "./head";
 import { drawImageRot } from "./utils/rotate-image";
-import { snake1, snakeBody } from "./asset";
+import { snake1Asset, snakeBodyAsset } from "./asset";
+import { SnakeBody } from "./body";
 
 const canvas = document.getElementById("can") as HTMLCanvasElement;
 const context = canvas.getContext("2d") as CanvasRenderingContext2D;
@@ -13,11 +14,11 @@ let snakeHead: SnakeHead;
 function drawSnakeHead(): void {
     drawImageRot(
         context,
-        snake1.element,
+        snake1Asset.element,
         snakeHead.x,
         snakeHead.y,
-        game.BLOCK_SIZE,
-        game.BLOCK_SIZE,
+        game.SNAKE_HEAD_SIZE,
+        game.SNAKE_HEAD_SIZE,
         snakeHead.degrees
     );
 }
@@ -27,19 +28,31 @@ function drawSnakeBody(): void {
     bodies.forEach((b: SnakeBody): void => {
         drawImageRot(
             context,
-            snakeBody.element,
+            snakeBodyAsset.element,
             b.x,
             b.y,
-            game.BLOCK_SIZE,
-            game.BLOCK_SIZE,
+            game.SNAKE_BODY_SIZE,
+            game.SNAKE_BODY_SIZE,
             b.degrees
         );
     });
 }
 
+function drawFood(): void {
+    drawImageRot(
+        context,
+        game.food.asset.element,
+        game.food.x,
+        game.food.y,
+        game.FOOD_SIZE,
+        game.FOOD_SIZE,
+        game.food.degrees
+    );
+}
+
 function initializeObjects(): void {
     game = new GameState();
-    game.createSnakeStart();
+    game.startGame();
     snakeHead = game.snakeHead;
     drawSnakeBody();
 }
@@ -49,6 +62,7 @@ function gameLoop(): void {
 
     drawSnakeHead();
     drawSnakeBody();
+    drawFood();
 
     snakeHead.moveSnake();
     // game.checkForCollidingSnakeBody();

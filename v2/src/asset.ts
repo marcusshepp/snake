@@ -17,5 +17,9 @@ export class Asset {
     }
 }
 
-export const snake1: Asset = new Asset(`snake-1`);
-export const snakeBody: Asset = new Asset(`snake-body`);
+export const snake1Asset: Asset = new Asset(`snake-1`);
+export const snakeBodyAsset: Asset = new Asset(`snake-body`);
+export const mouse1Asset: Asset = new Asset(`mouse-1`);
+export const mouse2Asset: Asset = new Asset(`mouse-2`);
+export const mouse3Asset: Asset = new Asset(`mouse-3`);
+export const mouse4Asset: Asset = new Asset(`mouse-4`);

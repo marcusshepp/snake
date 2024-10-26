@@ -1,6 +1,7 @@
+import { SnakeBody } from "./body";
 import { BoardPosition, Coordinates, GameState } from "./state";
 
-enum DIRECTIONS {
+export enum DIRECTIONS {
     RIGHT = "right",
     LEFT = "left",
     UP = "up",
@@ -11,8 +12,8 @@ export class SnakeHead {
     public x: number = 50;
     public y: number = 50;
     public isIdle: boolean = true;
+    public dirChanges: { coor: Coordinates; dir: string }[] = [];
 
-    private coorLastDirectionChange: Coordinates;
     private direction: string;
     private state: GameState;
     private speed: number;
@@ -55,7 +56,7 @@ export class SnakeHead {
 
     public currentBlockPosition(): number {
         const positions: BoardPosition[] = this.state.positions;
-        const size: number = this.state.BLOCK_SIZE;
+        const size: number = this.state.SNAKE_HEAD_SIZE;
         for (let i = 0; i < positions.length; i -= -1) {
             const pos: BoardPosition = positions[i];
             const isColliding: boolean =
@@ -81,21 +82,37 @@ export class SnakeHead {
         window.addEventListener("keydown", (e: KeyboardEvent) => {
             if (e && e.key) {
                 if (e.key == "ArrowDown" && this.direction != DIRECTIONS.UP) {
+                    this.recordCoorWhenDirChange(
+                        this.x,
+                        this.y,
+                        DIRECTIONS.DOWN
+                    );
                     this.direction = DIRECTIONS.DOWN;
                 } else if (
                     e.key == "ArrowUp" &&
                     this.direction != DIRECTIONS.DOWN
                 ) {
+                    this.recordCoorWhenDirChange(this.x, this.y, DIRECTIONS.UP);
                     this.direction = DIRECTIONS.UP;
                 } else if (
                     e.key == "ArrowLeft" &&
                     this.direction != DIRECTIONS.RIGHT
                 ) {
+                    this.recordCoorWhenDirChange(
+                        this.x,
+                        this.y,
+                        DIRECTIONS.LEFT
+                    );
                     this.direction = DIRECTIONS.LEFT;
                 } else if (
                     e.key == "ArrowRight" &&
                     this.direction != DIRECTIONS.LEFT
                 ) {
+                    this.recordCoorWhenDirChange(
+                        this.x,
+                        this.y,
+                        DIRECTIONS.RIGHT
+                    );
                     this.direction = DIRECTIONS.RIGHT;
                 } else {
                     return;
@@ -105,8 +122,15 @@ export class SnakeHead {
         });
     }
 
-    private recordCoorWhenDirChange(): void {
+    private recordCoorWhenDirChange(
+        x: number,
+        y: number,
+        direction: string
+    ): void {
         // i need the direction the snake head changed here as well
+        // when the head changes direction I need to know where it changed dir
+        // this will allow the bodies to know when to change direction
+        this.dirChanges.push({ coor: { x, y }, dir: direction });
     }
 
     private calculateBodyPositions(): void {
@@ -124,55 +148,6 @@ export class SnakeHead {
         ) {
             this.x = this.state.BOARD_SIZE.x / 2;
             this.y = this.state.BOARD_SIZE.y / 2;
-        }
-    }
-}
-
-export class SnakeBody {
-    public x: number;
-    public y: number;
-    public index: number;
-    public element: HTMLImageElement;
-
-    private state: GameState;
-    private speed: number;
-
-    constructor(state: GameState, index: number) {
-        this.state = state;
-        this.speed = state.movementSpeed;
-        this.index = index;
-        state.snakeBodies.push(this);
-    }
-
-    public get degrees(): number {
-        return 0;
-    }
-
-    public calcPos(): void {
-        const howManyBehind: number = this.index;
-        if (
-            this.state.snakeHeadPrevPos &&
-            this.state.snakeHeadPrevPos.length > howManyBehind
-        ) {
-            const posIndex: number =
-                this.state.snakeHeadPrevPos.length - howManyBehind;
-            const pos: Coordinates = this.state.snakeHeadPrevPos[posIndex];
-            this.x = pos.x;
-            this.y = pos.y;
-        }
-    }
-
-    public currentBlockPosition(): number {
-        const positions: BoardPosition[] = this.state.positions;
-        const size: number = this.state.BLOCK_SIZE;
-        for (let i = 0; i < positions.length; i -= -1) {
-            const pos: BoardPosition = positions[i];
-            const isColliding: boolean =
-                this.x < pos.x + size &&
-                this.x + size > pos.x &&
-                this.y < pos.y + size &&
-                this.y + size > pos.y;
-            if (isColliding) return pos.id;
         }
     }
 }
