@@ -18,7 +18,7 @@ export class Food {
 
     public getRandMouseAsset(): Asset {
         let assets: Asset[] = [
-            mouse1Asset,
+//             mouse1Asset,
             mouse2Asset,
             mouse3Asset,
             mouse4Asset,

@@ -26,7 +26,8 @@ export class BoardPosition {
 export class GameState {
     public SNAKE_HEAD_SIZE: number = 60;
     public SNAKE_BODY_SIZE: number = 40;
-    public FOOD_SIZE: number = 35;
+    public FOOD_SIZE_X: number = 32;
+    public FOOD_SIZE_Y: number = 50;
     public BOARD_SIZE: Coordinates = { x: 800, y: 600 };
     public positions: BoardPosition[] = [];
     public pause: boolean = false;

@@ -52,17 +52,18 @@ function drawFood(): void {
 
 function drawBoard(): void {
     context.beginPath();
-    const cellSize: number = 55;
+    const cellSize: number = 56;
     for (let x = 0; x < canvas.width; x += cellSize) {
         context.moveTo(x, 0);
+        context.fillStyle = '#edbb99';
         context.lineTo(x, canvas.height);
     }
     for (let y = 0; y < canvas.height; y += cellSize) {
         context.moveTo(0, y);
+        context.fillStyle = '#edbb99';
         context.lineTo(canvas.width, y);
     }
-    context.strokeStyle = '#df8c6b2b';
-
+    context.fillStyle = '#edbb99';
     context.stroke();
 }
 
